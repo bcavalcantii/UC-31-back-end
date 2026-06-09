@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preferências do Usuário</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+  /* ===========================
+   Variáveis padrão (Tema Claro)
+   =========================== */
+:root {
+  --bg-pagina:      #f0f4f8;
+  --bg-card:        #ffffff;
+  --bg-header:      #ffffff;
+  --cor-texto:      #1a202c;
+  --cor-subtexto:   #4a5568;
+  --cor-destaque:   #3b82f6;
+  --cor-borda:      #e2e8f0;
+  --sombra:         0 2px 12px rgba(0, 0, 0, 0.08);
+  --btn-primario-bg:#3b82f6;
+  --btn-primario-fg:#ffffff;
+  --btn-sec-bg:     #e2e8f0;
+  --btn-sec-fg:     #374151;
+  --btn-tema-bg:    #1e293b;
+  --btn-tema-fg:    #f8fafc;
+  --label-cor:      #64748b;
+}
+
+/* ===========================
+   Tema Escuro (sobrescreve :root)
+   =========================== */
+body.tema-escuro {
+  --bg-pagina:      #0f172a;
+  --bg-card:        #1e293b;
+  --bg-header:      #1e293b;
+  --cor-texto:      #f1f5f9;
+  --cor-subtexto:   #94a3b8;
+  --cor-destaque:   #60a5fa;
+  --cor-borda:      #334155;
+  --sombra:         0 2px 12px rgba(0, 0, 0, 0.4);
+  --btn-primario-bg:#3b82f6;
+  --btn-primario-fg:#ffffff;
+  --btn-sec-bg:     #334155;
+  --btn-sec-fg:     #e2e8f0;
+  --btn-tema-bg:    #f1f5f9;
+  --btn-tema-fg:    #0f172a;
+  --label-cor:      #94a3b8;
+}
+
+/* ===========================
+   Reset & Base
+   =========================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-pagina);
+  color: var(--cor-texto);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ===========================
+   Cabeçalho
+   =========================== */
+.cabecalho {
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cabecalho-conteudo {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+/* ===========================
+   Botão de Tema
+   =========================== */
+.btn-tema {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: var(--btn-tema-bg);
+  color: var(--btn-tema-fg);
+  padding: 0.45rem 1rem;
+  border-radius: 99px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.btn-tema:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+
+/* ===========================
+   Container principal
+   =========================== */
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+/* ===========================
+   Card genérico
+   =========================== */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: var(--sombra);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* ===========================
+   Saudação
+   =========================== */
+.saudacao {
+  text-align: center;
+}
+
+.saudacao-icone {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.saudacao h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.saudacao p {
+  color: var(--cor-subtexto);
+  margin-bottom: 1.25rem;
+}
+
+.destaque {
+  color: var(--cor-destaque);
+  font-weight: 700;
+}
+
+/* ===========================
+   Formulário
+   =========================== */
+.formulario h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  color: var(--cor-texto);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.campo label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cor-subtexto);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.campo input[type="text"] {
+  padding: 0.7rem 1rem;
+  border: 2px solid var(--cor-borda);
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: var(--bg-pagina);
+  color: var(--cor-texto);
+  outline: none;
+  transition: border-color 0.2s, background-color 0.3s;
+}
+
+.campo input[type="text"]:focus {
+  border-color: var(--cor-destaque);
+}
+
+.campo input[type="text"]::placeholder {
+  color: var(--label-cor);
+}
+
+/* ===========================
+   Botões
+   =========================== */
+.btn {
+  display: inline-block;
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.btn:hover {
+  opacity: 0.88;
+  transform: scale(1.02);
+}
+
+.btn-primario {
+  background-color: var(--btn-primario-bg);
+  color: var(--btn-primario-fg);
+  width: 100%;
+  text-align: center;
+}
+
+.btn-secundario {
+  background-color: var(--btn-sec-bg);
+  color: var(--btn-sec-fg);
+}
+
+/* ===========================
+   Info Cookies
+   =========================== */
+.info-cookies h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.info-cookies ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.info-cookies li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.info-cookies .label {
+  color: var(--label-cor);
+  font-weight: 600;
+  min-width: 70px;
+}
+
+.info-cookies .valor {
+  color: var(--cor-texto);
+}
+
+/* ===========================
+   Rodapé
+   =========================== */
+.rodape {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--cor-subtexto);
+  border-top: 1px solid var(--cor-borda);
+  margin-top: auto;
+}
+
+/* ===========================
+   Responsivo
+   =========================== */
+@media (max-width: 500px) {
+  .cabecalho-conteudo {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  .saudacao h2 {
+    font-size: 1.3rem;
+  }
+}
+  </style>
+</head>
+<body class="tema-{{ tema }}">
+
+ 
+  <header class="cabecalho">
+    <div class="cabecalho-conteudo">
+      <h1 class="logo">⚙️ MinhaApp</h1>
+
+     
+      <div class="tema-toggle">
+        {% if tema == "claro" %}
+          <a href="{{ url_for('alterar_tema', tema='escuro') }}" class="btn-tema" title="Ativar tema escuro">
+            🌙 Tema Escuro
+          </a>
+        {% else %}
+          <a href="{{ url_for('alterar_tema', tema='claro') }}" class="btn-tema" title="Ativar tema claro">
+            ☀️ Tema Claro
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+ 
+  <main class="container">
+
+   
+    <section class="card saudacao">
+      {% if nome %}
+        <div class="saudacao-icone">👋</div>
+        <h2>Bem-vindo de volta, <span class="destaque">{{ nome }}</span>!</h2>
+        <p>Suas preferências foram restauradas automaticamente.</p>
+        <a href="{{ url_for('limpar') }}" class="btn btn-secundario">Sair / Limpar dados</a>
+      {% else %}
+        <div class="saudacao-icone">🙂</div>
+        <h2>Olá, visitante!</h2>
+        <p>Informe seu nome abaixo para uma experiência personalizada.</p>
+      {% endif %}
+    </section>
+
+   
+    {% if not nome %}
+    <section class="card formulario">
+      <h3>📝 Cadastrar Nome</h3>
+      <form action="{{ url_for('salvar_nome') }}" method="POST">
+        <div class="campo">
+          <label for="nome">Seu nome</label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Digite seu nome..."
+            required
+            autocomplete="name"
+          />
+        </div>
+        <button type="submit" class="btn btn-primario">Salvar e personalizar</button>
+      </form>
+    </section>
+    {% endif %}
+
+   
+    <section class="card info-cookies">
+      <h3>🍪 Preferências salvas</h3>
+      <ul>
+        <li>
+          <span class="label">Nome:</span>
+          <span class="valor">{{ nome if nome else "Não informado" }}</span>
+        </li>
+        <li>
+          <span class="label">Tema:</span>
+          <span class="valor">{{ "Escuro 🌙" if tema == "escuro" else "Claro ☀️" }}</span>
+        </li>
+        <li>
+          <span class="label">Duração:</span>
+          <span class="valor">30 dias após o último acesso</span>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <p>Preferências armazenadas com <strong>Cookies HTTP</strong> · Flask &amp; Python</p>
+  </footer>
+
+</body>
+</html>
